@@ -15,6 +15,8 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +28,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.android.pets.data.PetContract.Gender;
+import com.example.android.pets.data.PetContract.PetEntry;
+import com.example.android.pets.data.PetDbHelper;
 
 /**
  * Allows user to create a new pet or edit an existing one.
@@ -120,6 +125,10 @@ public class EditorActivity extends AppCompatActivity {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Do nothing for now
+
+                if (!validateInput()) return false;
+                savePet();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -132,5 +141,38 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean validateInput() {
+        if (mNameEditText.getText().toString().isEmpty()) {
+            mNameEditText.requestFocus();
+            showToastMessage("Name is empty");
+            return false;
+        }
+        if (mWeightEditText.getText().toString().isEmpty()) {
+            mWeightEditText.requestFocus();
+            showToastMessage("Weight is empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void savePet() {
+        ContentValues values = new ContentValues();
+
+        values.put(PetEntry.NAME, mNameEditText.getText().toString());
+        values.put(PetEntry.BREED, mBreedEditText.getText().toString());
+        values.put(PetEntry.GENDER, mGender.ordinal());
+        values.put(PetEntry.WEIGHT, Integer.parseInt(mWeightEditText.getText().toString()));
+        values.put(PetEntry.AGE, 0);
+        SQLiteDatabase db = new PetDbHelper(this).getWritableDatabase();
+        long inerted = db.insert(PetEntry.TABLE_NAME, null, values);
+
+        showToastMessage("New pet inserted with id = " + inerted);
+    }
+
+    private void showToastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }
