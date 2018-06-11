@@ -128,7 +128,6 @@ public class EditorActivity extends AppCompatActivity {
 
                 if (!validateInput()) return false;
                 savePet();
-                NavUtils.navigateUpFromSameTask(this);
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -161,15 +160,20 @@ public class EditorActivity extends AppCompatActivity {
     private void savePet() {
         ContentValues values = new ContentValues();
 
-        values.put(PetEntry.NAME, mNameEditText.getText().toString());
-        values.put(PetEntry.BREED, mBreedEditText.getText().toString());
-        values.put(PetEntry.GENDER, mGender.ordinal());
-        values.put(PetEntry.WEIGHT, Integer.parseInt(mWeightEditText.getText().toString()));
-        values.put(PetEntry.AGE, 0);
-        SQLiteDatabase db = new PetDbHelper(this).getWritableDatabase();
-        long inerted = db.insert(PetEntry.TABLE_NAME, null, values);
+        try {
+            values.put(PetEntry.NAME, mNameEditText.getText().toString());
+            values.put(PetEntry.BREED, mBreedEditText.getText().toString());
+            values.put(PetEntry.GENDER, mGender.ordinal());
+            values.put(PetEntry.WEIGHT, Integer.parseInt(mWeightEditText.getText().toString()));
+            values.put(PetEntry.AGE, 0);
+            SQLiteDatabase db = new PetDbHelper(this).getWritableDatabase();
+            long inerted = db.insert(PetEntry.TABLE_NAME, null, values);
 
-        showToastMessage("New pet inserted with id = " + inerted);
+            showToastMessage("Pet saved with id: " + inerted);
+            NavUtils.navigateUpFromSameTask(this);
+        } catch (Exception e) {
+            showToastMessage("Error with saving pet");
+        }
     }
 
     private void showToastMessage(String message) {
