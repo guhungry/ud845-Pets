@@ -11,7 +11,8 @@ class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATAB
             "${PetEntry.NAME} TEXT NOT NULL," +
             "${PetEntry.BREED} TEXT," +
             "${PetEntry.GENDER} INTEGER NOT NULL," +
-            "${PetEntry.AGE} INTEGER NOT NULL DEFAULT 0);"
+            "${PetEntry.AGE} INTEGER NOT NULL," +
+            "${PetEntry.WEIGHT} INTEGER NOT NULL DEFAULT 0);"
     val SQL_DEOP_PETS = "DROP TABLE ${PetEntry.TABLE_NAME};"
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -25,6 +26,6 @@ class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATAB
 
     companion object {
         const val DATABASE_NAME = "Pets.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 3
     }
 }

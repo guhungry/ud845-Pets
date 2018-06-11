@@ -1,5 +1,6 @@
 package com.example.android.pets;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
 
@@ -79,6 +81,8 @@ public class CatalogActivity extends AppCompatActivity {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
                 // Do nothing for now
+                insertPet();
+                displayDatabaseInfo();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
@@ -86,5 +90,21 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertPet() {
+        ContentValues values = new ContentValues();
+
+        values.put(PetEntry.NAME, "Tommy");
+        values.put(PetEntry.BREED, "Pitbull");
+        values.put(PetEntry.GENDER, PetContract.Gender.Male.ordinal());
+        values.put(PetEntry.AGE, 5);
+        values.put(PetEntry.WEIGHT, 9);
+        insertData(values);
+    }
+
+    private void insertData(ContentValues values) {
+        SQLiteDatabase db = new PetDbHelper(this).getWritableDatabase();
+        db.insert(PetEntry.TABLE_NAME, null, values);
     }
 }

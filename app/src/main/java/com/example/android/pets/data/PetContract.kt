@@ -11,6 +11,7 @@ object PetContract {
         const val BREED = "breed"
         const val AGE = "age"
         const val GENDER = "gender"
+        const val WEIGHT = "weight"
     }
 
     enum class Gender {
