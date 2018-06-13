@@ -23,28 +23,18 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.PetDbHelper
+import kotlinx.android.synthetic.main.activity_editor.*
 
 /**
  * Allows user to create a new pet or edit an existing one.
  */
 class EditorActivity : AppCompatActivity() {
-
-    /** EditText field to enter the pet's name  */
-    private var mNameEditText: EditText? = null
-
-    /** EditText field to enter the pet's breed  */
-    private var mBreedEditText: EditText? = null
-
-    /** EditText field to enter the pet's weight  */
-    private var mWeightEditText: EditText? = null
-
-    /** EditText field to enter the pet's gender  */
-    private var mGenderSpinner: Spinner? = null
-
     /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
@@ -55,12 +45,6 @@ class EditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        // Find all relevant views that we will need to read user input from
-        mNameEditText = findViewById<View>(R.id.edit_pet_name) as EditText
-        mBreedEditText = findViewById<View>(R.id.edit_pet_breed) as EditText
-        mWeightEditText = findViewById<View>(R.id.edit_pet_weight) as EditText
-        mGenderSpinner = findViewById<View>(R.id.spinner_gender) as Spinner
-
         setupSpinner()
     }
 
@@ -70,17 +54,16 @@ class EditorActivity : AppCompatActivity() {
     private fun setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
-        val genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_gender_options, android.R.layout.simple_spinner_item)
+        val genderSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.array_gender_options, android.R.layout.simple_spinner_item)
 
         // Specify dropdown layout style - simple list view with 1 item per line
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
 
         // Apply the adapter to the spinner
-        mGenderSpinner!!.adapter = genderSpinnerAdapter
+        spinner_gender.adapter = genderSpinnerAdapter
 
         // Set the integer mSelected to the constant values
-        mGenderSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selection = parent.getItemAtPosition(position) as String
                 if (!TextUtils.isEmpty(selection)) {
@@ -113,8 +96,6 @@ class EditorActivity : AppCompatActivity() {
         when (item.itemId) {
         // Respond to a click on the "Save" menu option
             R.id.action_save -> {
-                // Do nothing for now
-
                 if (!validateInput()) return false
                 savePet()
                 return true
@@ -134,13 +115,13 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun validateInput(): Boolean {
-        if (mNameEditText!!.text.toString().isEmpty()) {
-            mNameEditText!!.requestFocus()
+        if (edit_pet_name!!.text.toString().isEmpty()) {
+            edit_pet_name!!.requestFocus()
             showToastMessage("Name is empty")
             return false
         }
-        if (mWeightEditText!!.text.toString().isEmpty()) {
-            mWeightEditText!!.requestFocus()
+        if (edit_pet_weight!!.text.toString().isEmpty()) {
+            edit_pet_weight!!.requestFocus()
             showToastMessage("Weight is empty")
             return false
         }
@@ -152,10 +133,10 @@ class EditorActivity : AppCompatActivity() {
         val values = ContentValues()
 
         try {
-            values.put(PetEntry.NAME, mNameEditText!!.text.toString())
-            values.put(PetEntry.BREED, mBreedEditText!!.text.toString())
+            values.put(PetEntry.NAME, edit_pet_name.text.toString())
+            values.put(PetEntry.BREED, edit_pet_breed.text.toString())
             values.put(PetEntry.GENDER, mGender.ordinal)
-            values.put(PetEntry.WEIGHT, Integer.parseInt(mWeightEditText!!.text.toString()))
+            values.put(PetEntry.WEIGHT, Integer.parseInt(edit_pet_weight.text.toString()))
             values.put(PetEntry.AGE, 0)
             val db = PetDbHelper(this).writableDatabase
             val inerted = db.insert(PetEntry.TABLE_NAME, null, values)

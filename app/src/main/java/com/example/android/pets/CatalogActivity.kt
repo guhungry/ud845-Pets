@@ -3,17 +3,16 @@ package com.example.android.pets
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.PetDbHelper
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.utils.StringUtils
+import kotlinx.android.synthetic.main.activity_catalog.*
 
 /**
  * Displays list of pets that were entered and stored in the app.
@@ -25,7 +24,6 @@ class CatalogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_catalog)
 
         // Setup FAB to open EditorActivity
-        val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
             val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
             startActivity(intent)
