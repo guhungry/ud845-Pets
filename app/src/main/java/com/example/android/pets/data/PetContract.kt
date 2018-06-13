@@ -1,10 +1,18 @@
 package com.example.android.pets.data
 
+import android.net.Uri
 import android.provider.BaseColumns
 
 object PetContract {
+    val CONTENT_AUTHORITY = "com.example.android.pets"
+    val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
+    val PATH_PETS = "pets"
+
+
     // Table contents are grouped together in an anonymous object.
     object PetEntry : BaseColumns {
+        val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PETS);
+
         const val TABLE_NAME = "pets"
         const val _ID = BaseColumns._ID
         const val NAME = "name"
