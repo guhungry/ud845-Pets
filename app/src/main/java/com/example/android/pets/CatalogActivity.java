@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
+import com.example.android.pets.model.PetModel;
 import com.example.android.pets.utils.StringUtils;
 
 /**
@@ -74,21 +75,16 @@ public class CatalogActivity extends AppCompatActivity {
             displayView.setText("The pers table contains " + cursor.getCount() + " pets" + StringUtils.Companion.getNEW_LINE() + StringUtils.Companion.getNEW_LINE());
             displayView.append(PetEntry._ID + ", " + PetEntry.NAME + ", " + PetEntry.BREED + ", " + PetEntry.GENDER + ", " + PetEntry.AGE + ", " + PetEntry.WEIGHT + StringUtils.Companion.getNEW_LINE());
 
-            int columnID = cursor.getColumnIndex(PetEntry._ID);
-            int columnNAME = cursor.getColumnIndex(PetEntry.NAME);
-            int columnBREED = cursor.getColumnIndex(PetEntry.BREED);
-            int columnGENDER = cursor.getColumnIndex(PetEntry.GENDER);
-            int columnAGE = cursor.getColumnIndex(PetEntry.AGE);
-            int columnWEIGHT = cursor.getColumnIndex(PetEntry.WEIGHT);
             while (cursor.moveToNext()) {
+                PetModel pet = PetModel.Companion.fromCursor(cursor);
                 displayView.append(
                         StringUtils.Companion.getNEW_LINE()
-                                + cursor.getLong(columnID) + ", "
-                                + cursor.getString(columnNAME) + ", "
-                                + cursor.getString(columnBREED) + ", "
-                                + cursor.getInt(columnGENDER) + ", "
-                                + cursor.getInt(columnAGE) + ", "
-                                + cursor.getInt(columnWEIGHT));
+                                + pet.getId() + ", "
+                                + pet.getName() + ", "
+                                + pet.getBreed() + ", "
+                                + pet.getGender() + ", "
+                                + pet.getAge() + ", "
+                                + pet.getWeight());
             }
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
