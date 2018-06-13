@@ -7,7 +7,7 @@ import com.example.android.pets.data.PetContract.PetEntry
 
 class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATABASE_NAME, null, PetDbHelper.DATABASE_VERSION) {
     val SQL_CREATE_PETS = "CREATE TABLE ${PetEntry.TABLE_NAME} (" +
-            "${PetEntry._ID}_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "${PetEntry._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
             "${PetEntry.NAME} TEXT NOT NULL," +
             "${PetEntry.BREED} TEXT," +
             "${PetEntry.GENDER} INTEGER NOT NULL," +
@@ -26,6 +26,6 @@ class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATAB
 
     companion object {
         const val DATABASE_NAME = "Pets.db"
-        const val DATABASE_VERSION = 3
+        const val DATABASE_VERSION = 4
     }
 }
