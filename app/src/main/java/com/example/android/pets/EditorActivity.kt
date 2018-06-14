@@ -18,7 +18,6 @@ package com.example.android.pets
 import android.content.ContentValues
 import android.os.Bundle
 import android.support.v4.app.NavUtils
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -28,13 +27,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.data.PetContract.PetEntry
-import com.example.android.pets.data.PetDbHelper
 import kotlinx.android.synthetic.main.activity_editor.*
 
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-class EditorActivity : AppCompatActivity() {
+class EditorActivity : BaseActivity() {
     /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
@@ -138,8 +136,7 @@ class EditorActivity : AppCompatActivity() {
             values.put(PetEntry.GENDER, mGender.ordinal)
             values.put(PetEntry.WEIGHT, Integer.parseInt(edit_pet_weight.text.toString()))
             values.put(PetEntry.AGE, 0)
-            val db = PetDbHelper(this).writableDatabase
-            val inerted = db.insert(PetEntry.TABLE_NAME, null, values)
+            val inerted = insertData(values)
 
             showToastMessage("Pet saved with id: $inerted")
             NavUtils.navigateUpFromSameTask(this)

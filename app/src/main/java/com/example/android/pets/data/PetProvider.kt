@@ -27,22 +27,18 @@ class PetProvider() : ContentProvider() {
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor {
         val database = db.readableDatabase
-        val match = uriMatcher.match(uri)
-        return when (match) {
-            PETS -> {
-                database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder)
-            }
-            PET_ID -> {
-                database.query(PetEntry.TABLE_NAME, projection, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()), null, null, sortOrder)
-            }
-            else -> {
-                throw IllegalArgumentException("Cannot query unknown URI")
-            }
+        return when (uriMatcher.match(uri)) {
+            PETS -> database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder)
+            PET_ID -> database.query(PetEntry.TABLE_NAME, projection, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()), null, null, sortOrder)
+            else -> throw IllegalArgumentException("Cannot query unknown URI")
         }
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return when (uriMatcher.match(uri)) {
+            PETS -> insertPet(uri, values)
+            else -> throw IllegalArgumentException("Cannot query unknown URI")
+        }
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
@@ -55,5 +51,12 @@ class PetProvider() : ContentProvider() {
 
     override fun getType(uri: Uri?): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun insertPet(uri: Uri, values: ContentValues?) : Uri {
+        val database = db.writableDatabase
+        val id = database.insert(PetEntry.TABLE_NAME, "", values)
+
+        return Uri.withAppendedPath(uri, id.toString())
     }
 }

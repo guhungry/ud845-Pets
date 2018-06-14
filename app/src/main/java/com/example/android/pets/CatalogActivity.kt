@@ -3,12 +3,10 @@ package com.example.android.pets
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
-import com.example.android.pets.data.PetDbHelper
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_catalog.*
@@ -16,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_catalog.*
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-class CatalogActivity : AppCompatActivity() {
+class CatalogActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +60,14 @@ class CatalogActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // User clicked on a menu option in the app bar overflow menu
         return when (item.itemId) {
-            // Respond to a click on the "Insert dummy data" menu option
+        // Respond to a click on the "Insert dummy data" menu option
             R.id.action_insert_dummy_data -> {
                 // Do nothing for now
                 insertPet()
                 displayDatabaseInfo()
                 true
             }
-            // Respond to a click on the "Delete all entries" menu option
+        // Respond to a click on the "Delete all entries" menu option
             R.id.action_delete_all_entries ->
                 // Do nothing for now
                 true
@@ -87,10 +85,5 @@ class CatalogActivity : AppCompatActivity() {
         values.put(PetEntry.AGE, 5)
         values.put(PetEntry.WEIGHT, 9)
         insertData(values)
-    }
-
-    private fun insertData(values: ContentValues) {
-        val db = PetDbHelper(this).writableDatabase
-        db.insert(PetEntry.TABLE_NAME, null, values)
     }
 }
