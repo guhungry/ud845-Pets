@@ -136,9 +136,9 @@ class EditorActivity : BaseActivity() {
             values.put(PetEntry.GENDER, mGender.ordinal)
             values.put(PetEntry.WEIGHT, Integer.parseInt(edit_pet_weight.text.toString()))
             values.put(PetEntry.AGE, 0)
-            val inerted = insertData(values)
+            val inserted = insertData(values)
 
-            showToastMessage("Pet saved with id: $inerted")
+            showToastMessage("Pet saved with id: $inserted")
             NavUtils.navigateUpFromSameTask(this)
         } catch (e: Exception) {
             showToastMessage("Error with saving pet")
