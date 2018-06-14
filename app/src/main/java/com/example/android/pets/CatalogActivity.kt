@@ -61,20 +61,21 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // User clicked on a menu option in the app bar overflow menu
-        when (item.itemId) {
-        // Respond to a click on the "Insert dummy data" menu option
+        return when (item.itemId) {
+            // Respond to a click on the "Insert dummy data" menu option
             R.id.action_insert_dummy_data -> {
                 // Do nothing for now
                 insertPet()
                 displayDatabaseInfo()
-                return true
+                true
             }
-        // Respond to a click on the "Delete all entries" menu option
+            // Respond to a click on the "Delete all entries" menu option
             R.id.action_delete_all_entries ->
                 // Do nothing for now
-                return true
+                true
+            else -> super.onOptionsItemSelected(item)
+
         }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun insertPet() {
