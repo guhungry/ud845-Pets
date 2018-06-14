@@ -30,14 +30,14 @@ class PetProvider() : ContentProvider() {
         return when (uriMatcher.match(uri)) {
             PETS -> database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder)
             PET_ID -> database.query(PetEntry.TABLE_NAME, projection, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()), null, null, sortOrder)
-            else -> throw IllegalArgumentException("Cannot query unknown URI")
+            else -> throw IllegalArgumentException("Cannot query unknown URI ($uri)")
         }
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri {
         return when (uriMatcher.match(uri)) {
             PETS -> insertPet(uri, values)
-            else -> throw IllegalArgumentException("Cannot query unknown URI")
+            else -> throw IllegalArgumentException("Insertion is not supported for $uri")
         }
     }
 
