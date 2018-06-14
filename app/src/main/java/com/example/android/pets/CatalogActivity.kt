@@ -37,8 +37,7 @@ class CatalogActivity : BaseActivity() {
      * the pets database.
      */
     private fun displayDatabaseInfo() {
-        baseContext.contentResolver
-                .query(PetEntry.CONTENT_URI, arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null)
+        queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null)
                 .use {
                     text_view_pet.text = "The pers table contains ${it.count} pets${StringUtils.NEW_LINE}${StringUtils.NEW_LINE}"
                     text_view_pet.append("${PetEntry._ID}, ${PetEntry.NAME}, ${PetEntry.BREED}, ${PetEntry.GENDER}, ${PetEntry.AGE}, ${PetEntry.WEIGHT}${StringUtils.NEW_LINE}")
@@ -62,8 +61,7 @@ class CatalogActivity : BaseActivity() {
         return when (item.itemId) {
         // Respond to a click on the "Insert dummy data" menu option
             R.id.action_insert_dummy_data -> {
-                // Do nothing for now
-                insertPet()
+                insertDummyPet()
                 displayDatabaseInfo()
                 true
             }
@@ -76,7 +74,7 @@ class CatalogActivity : BaseActivity() {
         }
     }
 
-    private fun insertPet() {
+    private fun insertDummyPet() {
         val values = ContentValues()
 
         values.put(PetEntry.NAME, "Tommy")
@@ -84,6 +82,6 @@ class CatalogActivity : BaseActivity() {
         values.put(PetEntry.GENDER, PetContract.Gender.Male.ordinal)
         values.put(PetEntry.AGE, 5)
         values.put(PetEntry.WEIGHT, 9)
-        insertData(values)
+        insertPet(values)
     }
 }

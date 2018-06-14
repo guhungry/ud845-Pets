@@ -136,7 +136,7 @@ class EditorActivity : BaseActivity() {
             values.put(PetEntry.GENDER, mGender.ordinal)
             values.put(PetEntry.WEIGHT, Integer.parseInt(edit_pet_weight.text.toString()))
             values.put(PetEntry.AGE, 0)
-            val inserted = insertData(values)
+            val inserted = insertPet(values)
 
             showToastMessage("Pet saved with id: $inserted")
             NavUtils.navigateUpFromSameTask(this)
