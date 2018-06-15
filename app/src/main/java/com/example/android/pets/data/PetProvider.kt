@@ -9,7 +9,7 @@ import android.net.Uri
 import com.example.android.pets.data.PetContract.PetEntry
 
 class PetProvider() : ContentProvider() {
-    lateinit var db: PetDbHelper
+    lateinit private var db: PetDbHelper
 
     companion object {
         const val PETS = 100
