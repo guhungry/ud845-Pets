@@ -64,7 +64,8 @@ class PetProvider() : ContentProvider() {
     }
 
     private fun insertPet(uri: Uri, values: ContentValues?): Uri {
-        if (values?.getAsString(PetEntry.NAME) == null) {
+        val name = values?.getAsString(PetEntry.NAME)
+        if (name == null || name.isBlank()) {
             throw IllegalArgumentException("Pet requires a name")
         }
         if (!PetEntry.isValidGender(values.getAsInteger(PetEntry.GENDER))) {
