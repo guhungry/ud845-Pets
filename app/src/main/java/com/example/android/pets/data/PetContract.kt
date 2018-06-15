@@ -12,7 +12,7 @@ object PetContract {
     object PetEntry : BaseColumns {
         val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PETS);
 
-        const val TABLE_NAME = "pets"
+        internal const val TABLE_NAME = "pets"
         const val _ID = BaseColumns._ID
         const val NAME = "name"
         const val BREED = "breed"

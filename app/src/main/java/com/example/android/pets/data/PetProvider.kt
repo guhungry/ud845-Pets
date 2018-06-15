@@ -42,11 +42,20 @@ class PetProvider() : ContentProvider() {
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
-        return 0
+        val database = db.writableDatabase
+        return when (uriMatcher.match(uri)) {
+            PET_ID -> database.update(PetEntry.TABLE_NAME, values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            else -> throw IllegalArgumentException("Update is not supported for ($uri)")
+        }
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        return 0
+        val database = db.writableDatabase
+        return when (uriMatcher.match(uri)) {
+            PETS -> database.delete(PetEntry.TABLE_NAME, "", arrayOf())
+            PET_ID -> database.delete(PetEntry.TABLE_NAME, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            else -> throw IllegalArgumentException("Deletion is not support for ($uri)")
+        }
     }
 
     override fun getType(uri: Uri?): String {
