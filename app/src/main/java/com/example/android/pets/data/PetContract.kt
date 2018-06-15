@@ -4,10 +4,9 @@ import android.net.Uri
 import android.provider.BaseColumns
 
 object PetContract {
-    val CONTENT_AUTHORITY = "com.example.android.pets"
-    val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
-    val PATH_PETS = "pets"
-
+    internal val CONTENT_AUTHORITY = "com.example.android.pets"
+    internal val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
+    internal val PATH_PETS = "pets"
 
     // Table contents are grouped together in an anonymous object.
     object PetEntry : BaseColumns {

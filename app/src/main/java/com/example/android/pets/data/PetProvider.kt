@@ -11,7 +11,7 @@ import com.example.android.pets.data.PetContract.PetEntry
 class PetProvider() : ContentProvider() {
     lateinit private var db: PetDbHelper
 
-    companion object {
+    private companion object {
         const val PETS = 100
         const val PET_ID = 101
     }

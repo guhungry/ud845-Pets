@@ -6,14 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.android.pets.data.PetContract.PetEntry
 
 internal class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATABASE_NAME, null, PetDbHelper.DATABASE_VERSION) {
-    val SQL_CREATE_PETS = "CREATE TABLE ${PetEntry.TABLE_NAME} (" +
+    private val SQL_CREATE_PETS = "CREATE TABLE ${PetEntry.TABLE_NAME} (" +
             "${PetEntry._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
             "${PetEntry.NAME} TEXT NOT NULL," +
             "${PetEntry.BREED} TEXT," +
             "${PetEntry.GENDER} INTEGER NOT NULL," +
             "${PetEntry.AGE} INTEGER NOT NULL," +
             "${PetEntry.WEIGHT} INTEGER NOT NULL DEFAULT 0);"
-    val SQL_DEOP_PETS = "DROP TABLE ${PetEntry.TABLE_NAME};"
+    private val SQL_DEOP_PETS = "DROP TABLE ${PetEntry.TABLE_NAME};"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SQL_CREATE_PETS)
@@ -24,7 +24,7 @@ internal class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHel
         db?.execSQL(SQL_CREATE_PETS)
     }
 
-    companion object {
+    private companion object {
         const val DATABASE_NAME = "Pets.db"
         const val DATABASE_VERSION = 4
     }
