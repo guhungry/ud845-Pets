@@ -141,7 +141,7 @@ class EditorActivity : BaseActivity() {
             showToastMessage("Pet saved with id: $inserted")
             NavUtils.navigateUpFromSameTask(this)
         } catch (e: Exception) {
-            showToastMessage("Error with saving pet")
+            showToastMessage("Error with saving pet ($e)")
         }
 
     }

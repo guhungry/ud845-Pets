@@ -10,6 +10,10 @@ object PetContract {
 
     // Table contents are grouped together in an anonymous object.
     object PetEntry : BaseColumns {
+        fun isValidGender(gender: Int?): Boolean {
+            return arrayOf(Gender.Unknown.ordinal, Gender.Male.ordinal, Gender.Female.ordinal).contains(gender)
+        }
+
         val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PETS);
 
         internal const val TABLE_NAME = "pets"

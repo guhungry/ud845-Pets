@@ -15,6 +15,7 @@ class PetProvider() : ContentProvider() {
         const val PETS = 100
         const val PET_ID = 101
     }
+
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS)
         addURI(PetContract.CONTENT_AUTHORITY, "${PetContract.PATH_PETS}/#", PET_ID)
@@ -62,7 +63,20 @@ class PetProvider() : ContentProvider() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun insertPet(uri: Uri, values: ContentValues?) : Uri {
+    private fun insertPet(uri: Uri, values: ContentValues?): Uri {
+        if (values?.getAsString(PetEntry.NAME) == null) {
+            throw IllegalArgumentException("Pet requires a name")
+        }
+        if (!PetEntry.isValidGender(values.getAsInteger(PetEntry.GENDER))) {
+            throw IllegalArgumentException("Pet gender is invalid")
+        }
+        val weight = values.getAsInteger(PetEntry.WEIGHT)
+        if (weight == null) {
+            values.put(PetEntry.WEIGHT, 0)
+        } else if (weight < 0) {
+            throw IllegalArgumentException("Pet weight can not be negative")
+        }
+
         val database = db.writableDatabase
         val id = database.insert(PetEntry.TABLE_NAME, "", values)
 
