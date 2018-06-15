@@ -66,9 +66,11 @@ class CatalogActivity : BaseActivity() {
                 true
             }
         // Respond to a click on the "Delete all entries" menu option
-            R.id.action_delete_all_entries ->
-                // Do nothing for now
+            R.id.action_delete_all_entries -> {
+                deletePets()
+                displayDatabaseInfo()
                 true
+            }
             else -> super.onOptionsItemSelected(item)
 
         }

@@ -17,4 +17,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun queryPets(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?) : Cursor {
         return baseContext.contentResolver.query(PetContract.PetEntry.CONTENT_URI, projection, null, null, null)
     }
+
+    protected fun deletePets() : Int {
+        return baseContext.contentResolver.delete(PetContract.PetEntry.CONTENT_URI, null, null)
+    }
 }
