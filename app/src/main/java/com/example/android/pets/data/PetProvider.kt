@@ -43,19 +43,17 @@ class PetProvider() : ContentProvider() {
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
-        val database = db.writableDatabase
         return when (uriMatcher.match(uri)) {
-            PETS -> database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
-            PET_ID -> database.update(PetEntry.TABLE_NAME, values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            PETS -> updatePets(values, selection, selectionArgs)
+            PET_ID -> updatePets(values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
             else -> throw IllegalArgumentException("Update is not supported for ($uri)")
         }
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        val database = db.writableDatabase
         return when (uriMatcher.match(uri)) {
-            PETS -> database.delete(PetEntry.TABLE_NAME, "", arrayOf())
-            PET_ID -> database.delete(PetEntry.TABLE_NAME, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            PETS -> deletePets(selection, selectionArgs)
+            PET_ID -> deletePets("${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
             else -> throw IllegalArgumentException("Deletion is not support for ($uri)")
         }
     }
@@ -83,5 +81,17 @@ class PetProvider() : ContentProvider() {
         val id = database.insert(PetEntry.TABLE_NAME, "", values)
 
         return Uri.withAppendedPath(uri, id.toString())
+    }
+
+    private fun updatePets(values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+        val database = db.writableDatabase
+
+        return database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
+    }
+
+    private fun deletePets(selection: String?, selectionArgs: Array<out String>?): Int {
+        val database = db.writableDatabase
+
+        return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs)
     }
 }

@@ -19,6 +19,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     protected fun deletePets() : Int {
-        return baseContext.contentResolver.delete(PetContract.PetEntry.CONTENT_URI, null, null)
+        return baseContext.contentResolver.delete(PetContract.PetEntry.CONTENT_URI, "", arrayOf())
     }
 }
