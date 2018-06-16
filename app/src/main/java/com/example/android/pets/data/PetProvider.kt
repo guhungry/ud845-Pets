@@ -45,6 +45,7 @@ class PetProvider() : ContentProvider() {
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
         val database = db.writableDatabase
         return when (uriMatcher.match(uri)) {
+            PETS -> database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
             PET_ID -> database.update(PetEntry.TABLE_NAME, values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
             else -> throw IllegalArgumentException("Update is not supported for ($uri)")
         }
