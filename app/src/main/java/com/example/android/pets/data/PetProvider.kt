@@ -42,7 +42,7 @@ class PetProvider() : ContentProvider() {
         }
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+    override fun update(uri: Uri, values: ContentValues, selection: String?, selectionArgs: Array<out String>?): Int {
         return when (uriMatcher.match(uri)) {
             PETS -> updatePets(values, selection, selectionArgs)
             PET_ID -> updatePets(values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
@@ -83,7 +83,22 @@ class PetProvider() : ContentProvider() {
         return Uri.withAppendedPath(uri, id.toString())
     }
 
-    private fun updatePets(values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+    private fun updatePets(values: ContentValues, selection: String?, selectionArgs: Array<out String>?): Int {
+        if (values.size() == 0) return 0
+
+        val name = values.getAsString(PetEntry.NAME)
+        if (name != null && name.isBlank()) {
+            throw IllegalArgumentException("Pet requires a name")
+        }
+        val gender = values.getAsInteger(PetEntry.GENDER)
+        if (gender != null && !PetEntry.isValidGender(gender)) {
+            throw IllegalArgumentException("Pet gender is invalid")
+        }
+        val weight = values.getAsInteger(PetEntry.WEIGHT)
+        if (weight != null && weight < 0) {
+            throw IllegalArgumentException("Pet weight can not be negative")
+        }
+
         val database = db.writableDatabase
 
         return database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
