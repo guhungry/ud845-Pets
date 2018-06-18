@@ -1,11 +1,10 @@
 package com.example.android.pets.data
 
-import android.content.ContentProvider
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.UriMatcher
+import android.content.*
 import android.database.Cursor
 import android.net.Uri
+import com.example.android.pets.data.PetContract.CONTENT_AUTHORITY
+import com.example.android.pets.data.PetContract.PATH_PETS
 import com.example.android.pets.data.PetContract.PetEntry
 
 class PetProvider() : ContentProvider() {
@@ -17,8 +16,8 @@ class PetProvider() : ContentProvider() {
     }
 
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
-        addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS)
-        addURI(PetContract.CONTENT_AUTHORITY, "${PetContract.PATH_PETS}/#", PET_ID)
+        addURI(CONTENT_AUTHORITY, PATH_PETS, PETS)
+        addURI(CONTENT_AUTHORITY, "${PATH_PETS}/#", PET_ID)
     }
 
     override fun onCreate(): Boolean {
@@ -59,7 +58,11 @@ class PetProvider() : ContentProvider() {
     }
 
     override fun getType(uri: Uri?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return when (uriMatcher.match(uri)) {
+            PETS -> ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PETS
+            PET_ID -> ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PETS
+            else -> throw IllegalArgumentException("Unknown URI $uri with match")
+        }
     }
 
     private fun insertPet(uri: Uri, values: ContentValues?): Uri {
