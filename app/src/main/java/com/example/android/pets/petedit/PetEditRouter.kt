@@ -14,8 +14,11 @@ class PetEditRouter {
             context.startActivity(intent)
         }
 
-        override fun editPetPresenterFor(view: PetEditProtocol.View, uri: Uri?) : PetEditProtocol.Presenter {
-            return PetEditPresenter(uri).apply { this.view = view }
+        override fun presenterFor(view: PetEditProtocol.View, uri: Uri?) : PetEditProtocol.Presenter {
+            val presenter: PetEditProtocol.Presenter = PetEditPresenter(uri)
+
+            presenter.view = view
+            return presenter
         }
     }
 }

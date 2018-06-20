@@ -3,7 +3,7 @@ package com.example.android.pets.petedit
 import android.net.Uri
 
 class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
-    var view: PetEditProtocol.View? = null
+    override var view: PetEditProtocol.View? = null
 
     private fun isEdit() : Boolean {
         return uri != null

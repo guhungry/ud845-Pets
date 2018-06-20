@@ -28,7 +28,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.data.PetContract.PetEntry
-import com.example.android.pets.petedit.PetEditPresenter
 import com.example.android.pets.petedit.PetEditProtocol
 import com.example.android.pets.petedit.PetEditRouter
 import kotlinx.android.synthetic.main.activity_editor.*
@@ -43,7 +42,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
      */
     private var mGender = Gender.Unknown
     private var uri: Uri? = null
-    private var presenter: PetEditProtocol.Presenter? = null
+    override var presenter: PetEditProtocol.Presenter? = null
 
     companion object {
         val INPUT_URL = "URL"
@@ -54,7 +53,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         setContentView(R.layout.activity_editor)
 
         uri = intent?.extras?.get(INPUT_URL) as Uri?
-        presenter = PetEditRouter.editPetPresenterFor(this, uri)
+        presenter = PetEditRouter.presenterFor(this, uri)
         setupSpinner()
         presenter?.start()
     }
