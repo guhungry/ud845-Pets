@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
+import com.example.android.pets.data.adapters.PetAdapter
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_catalog.*
@@ -15,11 +16,13 @@ import kotlinx.android.synthetic.main.activity_catalog.*
  * Displays list of pets that were entered and stored in the app.
  */
 class CatalogActivity : BaseActivity() {
+    private val adapter = PetAdapter(context = this, cursor = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalog)
 
+        list_pets.adapter = adapter
         // Setup FAB to open EditorActivity
         fab.setOnClickListener {
             val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
@@ -37,16 +40,7 @@ class CatalogActivity : BaseActivity() {
      * the pets database.
      */
     private fun displayDatabaseInfo() {
-        queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null)
-                .use {
-                    text_view_pet.text = "The pers table contains ${it.count} pets${StringUtils.NEW_LINE}${StringUtils.NEW_LINE}"
-                    text_view_pet.append("${PetEntry._ID}, ${PetEntry.NAME}, ${PetEntry.BREED}, ${PetEntry.GENDER}, ${PetEntry.AGE}, ${PetEntry.WEIGHT}${StringUtils.NEW_LINE}")
-
-                    while (it.moveToNext()) {
-                        val pet = PetModel.fromCursor(it)
-                        text_view_pet.append("${StringUtils.NEW_LINE}${pet.id}, ${pet.name}, ${pet.breed}, ${pet.gender}, ${pet.age}, ${pet.weight}")
-                    }
-                }
+        adapter.changeCursor(queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
