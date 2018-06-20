@@ -3,15 +3,15 @@ package com.example.android.pets.model
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.example.android.pets.data.PetContract.Gender.*
+import com.example.android.pets.data.PetContract.Gender.Male
 import com.example.android.pets.data.PetContract.PetEntry
 
 class PetModel(var id: Long, var name: String, var gender: Int, var weight: Int, var age: Int = 0, var breed: String = "") {
-    val url : Uri
+    val url: Uri
         get() = Uri.withAppendedPath(PetEntry.CONTENT_URI, id.toString())
 
     companion object {
-        fun fromCursor(cursor: Cursor) : PetModel {
+        fun fromCursor(cursor: Cursor): PetModel {
             val columnID = cursor.getColumnIndex(PetEntry._ID)
             val columnNAME = cursor.getColumnIndex(PetEntry.NAME)
             val columnBREED = cursor.getColumnIndex(PetEntry.BREED)
@@ -27,7 +27,7 @@ class PetModel(var id: Long, var name: String, var gender: Int, var weight: Int,
                     weight = cursor.getInt(columnWEIGHT))
         }
 
-        fun dummy() : PetModel {
+        fun dummy(): PetModel {
             return PetModel(id = 0,
                     name = "Tommy",
                     breed = "Pitbull",
@@ -37,7 +37,7 @@ class PetModel(var id: Long, var name: String, var gender: Int, var weight: Int,
         }
     }
 
-    fun toContentValues() : ContentValues {
+    fun toContentValues(): ContentValues {
         return ContentValues().apply {
             put(PetEntry.NAME, name)
             put(PetEntry.BREED, breed)

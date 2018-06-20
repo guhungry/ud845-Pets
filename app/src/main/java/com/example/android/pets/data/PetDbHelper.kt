@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.android.pets.data.PetContract.PetEntry
 
-internal class PetDbHelper(context: Context): SQLiteOpenHelper(context, PetDbHelper.DATABASE_NAME, null, PetDbHelper.DATABASE_VERSION) {
+internal class PetDbHelper(context: Context) : SQLiteOpenHelper(context, PetDbHelper.DATABASE_NAME, null, PetDbHelper.DATABASE_VERSION) {
     private val SQL_CREATE_PETS = "CREATE TABLE ${PetEntry.TABLE_NAME} (" +
             "${PetEntry._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
             "${PetEntry.NAME} TEXT NOT NULL," +

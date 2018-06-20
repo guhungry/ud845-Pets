@@ -5,7 +5,7 @@ import android.net.Uri
 class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
     override var view: PetEditProtocol.View? = null
 
-    private fun isEdit() : Boolean {
+    private fun isEdit(): Boolean {
         return uri != null
     }
 
@@ -18,7 +18,7 @@ class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
         view = null
     }
 
-    private fun title() : String {
+    private fun title(): String {
         return if (isEdit()) "Edit Pet" else "Add a Pet"
     }
 }

@@ -1,14 +1,12 @@
 package com.example.android.pets
 
 import android.app.LoaderManager
-import android.content.ContentValues
 import android.content.CursorLoader
 import android.content.Loader
 import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.adapters.PetAdapter
 import com.example.android.pets.model.PetModel
@@ -52,18 +50,15 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // User clicked on a menu option in the app bar overflow menu
         return when (item.itemId) {
-        // Respond to a click on the "Insert dummy data" menu option
             R.id.action_insert_dummy_data -> {
                 insertDummyPet()
                 true
             }
-        // Respond to a click on the "Delete all entries" menu option
             R.id.action_delete_all_entries -> {
                 deletePets()
                 true
             }
             else -> super.onOptionsItemSelected(item)
-
         }
     }
 
