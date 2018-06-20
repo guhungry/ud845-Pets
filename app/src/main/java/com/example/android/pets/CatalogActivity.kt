@@ -8,8 +8,6 @@ import android.view.MenuItem
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.adapters.PetAdapter
-import com.example.android.pets.model.PetModel
-import com.example.android.pets.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_catalog.*
 
 /**
@@ -41,6 +39,7 @@ class CatalogActivity : BaseActivity() {
      */
     private fun displayDatabaseInfo() {
         adapter.changeCursor(queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null))
+        empty_pet.visibility = adapter.showEmptyPet()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

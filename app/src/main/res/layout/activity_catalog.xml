@@ -24,7 +24,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_pet"/>
+        android:src="@drawable/ic_add_pet" />
 
     <ListView
         android:id="@+id/list_pets"
@@ -36,4 +36,11 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
+
+    <include
+        android:id="@+id/empty_pet"
+        layout="@layout/empty_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 </RelativeLayout>
