@@ -15,7 +15,6 @@
  */
 package com.example.android.pets
 
-import android.content.ContentValues
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.NavUtils
@@ -27,7 +26,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
-import com.example.android.pets.data.PetContract.PetEntry
+import com.example.android.pets.model.PetModel
 import com.example.android.pets.petedit.PetEditProtocol
 import com.example.android.pets.petedit.PetEditRouter
 import kotlinx.android.synthetic.main.activity_editor.*
@@ -146,15 +145,9 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     }
 
     private fun savePet() {
-        val values = ContentValues()
-
         try {
-            values.put(PetEntry.NAME, edit_pet_name.text.toString())
-            values.put(PetEntry.BREED, edit_pet_breed.text.toString())
-            values.put(PetEntry.GENDER, mGender.ordinal)
-            values.put(PetEntry.WEIGHT, Integer.parseInt(edit_pet_weight.text.toString()))
-            values.put(PetEntry.AGE, 0)
-            val inserted = insertPet(values)
+            val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_name.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
+            val inserted = insertPet(pet.toContentValues())
 
             showToastMessage("Pet saved with id: $inserted")
             NavUtils.navigateUpFromSameTask(this)

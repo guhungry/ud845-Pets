@@ -68,14 +68,8 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     }
 
     private fun insertDummyPet() {
-        val values = ContentValues()
-
-        values.put(PetEntry.NAME, "Tommy")
-        values.put(PetEntry.BREED, "Pitbull")
-        values.put(PetEntry.GENDER, PetContract.Gender.Male.ordinal)
-        values.put(PetEntry.AGE, 5)
-        values.put(PetEntry.WEIGHT, 9)
-        insertPet(values)
+        val pet = PetModel.dummy()
+        insertPet(pet.toContentValues())
     }
 
     // Data Loader
