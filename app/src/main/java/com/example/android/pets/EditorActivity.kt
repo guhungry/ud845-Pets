@@ -76,15 +76,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selection = parent.getItemAtPosition(position) as String
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection == getString(R.string.gender_male)) {
-                        mGender = Gender.Male
-                    } else if (selection == getString(R.string.gender_female)) {
-                        mGender = Gender.Female
-                    } else {
-                        mGender = Gender.Unknown
-                    }
-                }
+                mGender = Gender.valueOf(selection)
             }
 
             // Because AdapterView is an abstract class, onNothingSelected must be defined
