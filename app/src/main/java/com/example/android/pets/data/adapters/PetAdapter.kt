@@ -25,5 +25,6 @@ class PetAdapter(context: Context?, cursor: Cursor?) : CursorAdapter(context, cu
         val pet = PetModel.fromCursor(cursor)
         view.findViewById<TextView>(R.id.name).text = pet.name
         view.findViewById<TextView>(R.id.breed).text = pet.breed
+        view.tag = pet
     }
 }

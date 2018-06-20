@@ -9,9 +9,11 @@ import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AdapterView
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.adapters.PetAdapter
+import com.example.android.pets.model.PetModel
 import kotlinx.android.synthetic.main.activity_catalog.*
 
 /**
@@ -28,6 +30,13 @@ class CatalogActivity : BaseActivity(), LoaderManager.LoaderCallbacks<Cursor> {
         loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
         list_pets.adapter = adapter
         list_pets.emptyView = empty_pet
+        list_pets.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
+            val pet: PetModel = view.tag as PetModel
+            val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
+
+            intent.putExtra(EditorActivity.INPUT_URL, pet.url)
+            startActivity(intent)
+        }
         // Setup FAB to open EditorActivity
         fab.setOnClickListener {
             val intent = Intent(this@CatalogActivity, EditorActivity::class.java)

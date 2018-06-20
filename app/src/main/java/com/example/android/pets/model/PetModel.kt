@@ -1,17 +1,20 @@
 package com.example.android.pets.model
 
 import android.database.Cursor
-import com.example.android.pets.data.PetContract
+import android.net.Uri
+import com.example.android.pets.data.PetContract.PetEntry
 
 class PetModel(var id: Long, var name: String, var gender: Int, var age: Int, var weight: Int, var breed: String = "") {
+    val url = Uri.withAppendedPath(PetEntry.CONTENT_URI, id.toString())
+
     companion object {
         fun fromCursor(cursor: Cursor) : PetModel {
-            val columnID = cursor.getColumnIndex(PetContract.PetEntry._ID)
-            val columnNAME = cursor.getColumnIndex(PetContract.PetEntry.NAME)
-            val columnBREED = cursor.getColumnIndex(PetContract.PetEntry.BREED)
-            val columnGENDER = cursor.getColumnIndex(PetContract.PetEntry.GENDER)
-            val columnAGE = cursor.getColumnIndex(PetContract.PetEntry.AGE)
-            val columnWEIGHT = cursor.getColumnIndex(PetContract.PetEntry.WEIGHT)
+            val columnID = cursor.getColumnIndex(PetEntry._ID)
+            val columnNAME = cursor.getColumnIndex(PetEntry.NAME)
+            val columnBREED = cursor.getColumnIndex(PetEntry.BREED)
+            val columnGENDER = cursor.getColumnIndex(PetEntry.GENDER)
+            val columnAGE = cursor.getColumnIndex(PetEntry.AGE)
+            val columnWEIGHT = cursor.getColumnIndex(PetEntry.WEIGHT)
 
             return PetModel(id = cursor.getLong(columnID),
                     name = cursor.getString(columnNAME),

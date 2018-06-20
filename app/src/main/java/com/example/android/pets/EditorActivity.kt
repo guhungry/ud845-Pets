@@ -16,6 +16,7 @@
 package com.example.android.pets
 
 import android.content.ContentValues
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.text.TextUtils
@@ -27,23 +28,40 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.data.PetContract.PetEntry
+import com.example.android.pets.petedit.PetEditPresenter
+import com.example.android.pets.petedit.PetEditProtocol
 import kotlinx.android.synthetic.main.activity_editor.*
 
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-class EditorActivity : BaseActivity() {
+class EditorActivity : BaseActivity(), PetEditProtocol.View {
     /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private var mGender = Gender.Unknown
+    private var uri: Uri? = null
+    private var presenter: PetEditProtocol.Presenter? = null
+
+    companion object {
+        val INPUT_URL = "URL"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
+        uri = intent?.extras?.get(INPUT_URL) as Uri?
+        presenter = PetEditPresenter(uri).apply { view = this@EditorActivity }
         setupSpinner()
+        presenter?.start()
+    }
+
+    override fun onDestroy() {
+        presenter?.stop()
+        presenter = null
+        super.onDestroy()
     }
 
     /**
@@ -110,6 +128,10 @@ class EditorActivity : BaseActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun setTitle(text: String) {
+        super.setTitle(text)
     }
 
     private fun validateInput(): Boolean {
