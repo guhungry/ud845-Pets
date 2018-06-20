@@ -110,7 +110,7 @@ class PetProvider() : ContentProvider() {
         val database = db.writableDatabase
         val result = database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
 
-        context.contentResolver.notifyChange(uri, null)
+        if (result != 0) context.contentResolver.notifyChange(uri, null)
         return result
     }
 
@@ -118,7 +118,7 @@ class PetProvider() : ContentProvider() {
         val database = db.writableDatabase
         val result = database.delete(PetEntry.TABLE_NAME, selection, selectionArgs)
 
-        context.contentResolver.notifyChange(uri, null)
+        if (result != 0) context.contentResolver.notifyChange(uri, null)
         return result
     }
 }
