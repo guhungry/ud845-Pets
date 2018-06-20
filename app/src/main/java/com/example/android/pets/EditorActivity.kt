@@ -24,7 +24,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.petedit.PetEditProtocol
@@ -154,10 +153,5 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         } catch (e: Exception) {
             showToastMessage("Error with saving pet ($e)")
         }
-
-    }
-
-    private fun showToastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }
