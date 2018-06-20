@@ -8,7 +8,6 @@ import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.AdapterView
 import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.adapters.PetAdapter
@@ -33,7 +32,7 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
         loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
         list_pets.adapter = adapter
         list_pets.emptyView = empty_pet
-        list_pets.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
+        list_pets.setOnItemClickListener { adapterView, view, position, id ->
             val pet: PetModel = view.tag as PetModel
             presenter?.showPetEditScreenFor(this@CatalogActivity, pet.url)
         }

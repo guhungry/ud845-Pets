@@ -70,13 +70,9 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     private fun setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
-        val genderSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.array_gender_options, android.R.layout.simple_spinner_item)
-
-        // Specify dropdown layout style - simple list view with 1 item per line
-        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-
-        // Apply the adapter to the spinner
-        spinner_gender.adapter = genderSpinnerAdapter
+        spinner_gender.adapter = ArrayAdapter.createFromResource(this, R.array.array_gender_options, android.R.layout.simple_spinner_item).apply {
+            setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+        }
 
         // Set the integer mSelected to the constant values
         spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
