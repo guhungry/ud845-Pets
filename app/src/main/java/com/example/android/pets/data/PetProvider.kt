@@ -27,11 +27,15 @@ class PetProvider() : ContentProvider() {
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor {
         val database = db.readableDatabase
-        return when (uriMatcher.match(uri)) {
+
+        val cursor = when (uriMatcher.match(uri)) {
             PETS -> database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder)
             PET_ID -> database.query(PetEntry.TABLE_NAME, projection, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()), null, null, sortOrder)
             else -> throw IllegalArgumentException("Cannot query unknown URI ($uri)")
         }
+
+        cursor.setNotificationUri(context.contentResolver, uri)
+        return cursor
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri {
@@ -43,16 +47,16 @@ class PetProvider() : ContentProvider() {
 
     override fun update(uri: Uri, values: ContentValues, selection: String?, selectionArgs: Array<out String>?): Int {
         return when (uriMatcher.match(uri)) {
-            PETS -> updatePets(values, selection, selectionArgs)
-            PET_ID -> updatePets(values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            PETS -> updatePets(uri, values, selection, selectionArgs)
+            PET_ID -> updatePets(uri, values, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
             else -> throw IllegalArgumentException("Update is not supported for ($uri)")
         }
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         return when (uriMatcher.match(uri)) {
-            PETS -> deletePets(selection, selectionArgs)
-            PET_ID -> deletePets("${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
+            PETS -> deletePets(uri, selection, selectionArgs)
+            PET_ID -> deletePets(uri, "${PetEntry._ID}=?", arrayOf(ContentUris.parseId(uri).toString()))
             else -> throw IllegalArgumentException("Deletion is not support for ($uri)")
         }
     }
@@ -83,10 +87,11 @@ class PetProvider() : ContentProvider() {
         val database = db.writableDatabase
         val id = database.insert(PetEntry.TABLE_NAME, "", values)
 
+        context.contentResolver.notifyChange(uri, null)
         return Uri.withAppendedPath(uri, id.toString())
     }
 
-    private fun updatePets(values: ContentValues, selection: String?, selectionArgs: Array<out String>?): Int {
+    private fun updatePets(uri: Uri, values: ContentValues, selection: String?, selectionArgs: Array<out String>?): Int {
         if (values.size() == 0) return 0
 
         val name = values.getAsString(PetEntry.NAME)
@@ -103,13 +108,17 @@ class PetProvider() : ContentProvider() {
         }
 
         val database = db.writableDatabase
+        val result = database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
 
-        return database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs)
+        context.contentResolver.notifyChange(uri, null)
+        return result
     }
 
-    private fun deletePets(selection: String?, selectionArgs: Array<out String>?): Int {
+    private fun deletePets(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         val database = db.writableDatabase
+        val result = database.delete(PetEntry.TABLE_NAME, selection, selectionArgs)
 
-        return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs)
+        context.contentResolver.notifyChange(uri, null)
+        return result
     }
 }

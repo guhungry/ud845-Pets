@@ -1,7 +1,11 @@
 package com.example.android.pets
 
+import android.app.LoaderManager
 import android.content.ContentValues
+import android.content.CursorLoader
 import android.content.Intent
+import android.content.Loader
+import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,13 +17,15 @@ import kotlinx.android.synthetic.main.activity_catalog.*
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-class CatalogActivity : BaseActivity() {
+class CatalogActivity : BaseActivity(), LoaderManager.LoaderCallbacks<Cursor> {
+    private val PET_LOADER_ID = 1
     private val adapter = PetAdapter(context = this, cursor = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalog)
 
+        loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
         list_pets.adapter = adapter
         list_pets.emptyView = empty_pet
         // Setup FAB to open EditorActivity
@@ -27,19 +33,6 @@ class CatalogActivity : BaseActivity() {
             val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        displayDatabaseInfo()
-    }
-
-    /**
-     * Temporary helper method to display information in the onscreen TextView about the state of
-     * the pets database.
-     */
-    private fun displayDatabaseInfo() {
-        adapter.changeCursor(queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -55,13 +48,11 @@ class CatalogActivity : BaseActivity() {
         // Respond to a click on the "Insert dummy data" menu option
             R.id.action_insert_dummy_data -> {
                 insertDummyPet()
-                displayDatabaseInfo()
                 true
             }
         // Respond to a click on the "Delete all entries" menu option
             R.id.action_delete_all_entries -> {
                 deletePets()
-                displayDatabaseInfo()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -78,5 +69,18 @@ class CatalogActivity : BaseActivity() {
         values.put(PetEntry.AGE, 5)
         values.put(PetEntry.WEIGHT, 9)
         insertPet(values)
+    }
+
+    // Data Loader
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        return CursorLoader(this, PetEntry.CONTENT_URI, arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
+        adapter.swapCursor(data)
+    }
+
+    override fun onLoaderReset(loader: Loader<Cursor>?) {
+        adapter.swapCursor(null)
     }
 }
