@@ -30,6 +30,7 @@ import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.petedit.PetEditPresenter
 import com.example.android.pets.petedit.PetEditProtocol
+import com.example.android.pets.petedit.PetEditRouter
 import kotlinx.android.synthetic.main.activity_editor.*
 
 /**
@@ -53,7 +54,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         setContentView(R.layout.activity_editor)
 
         uri = intent?.extras?.get(INPUT_URL) as Uri?
-        presenter = PetEditPresenter(uri).apply { view = this@EditorActivity }
+        presenter = PetEditRouter.editPetPresenterFor(this, uri)
         setupSpinner()
         presenter?.start()
     }

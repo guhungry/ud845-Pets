@@ -14,6 +14,7 @@ import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.PetEntry
 import com.example.android.pets.data.adapters.PetAdapter
 import com.example.android.pets.model.PetModel
+import com.example.android.pets.petedit.PetEditRouter
 import kotlinx.android.synthetic.main.activity_catalog.*
 
 /**
@@ -32,15 +33,11 @@ class CatalogActivity : BaseActivity(), LoaderManager.LoaderCallbacks<Cursor> {
         list_pets.emptyView = empty_pet
         list_pets.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
             val pet: PetModel = view.tag as PetModel
-            val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
-
-            intent.putExtra(EditorActivity.INPUT_URL, pet.url)
-            startActivity(intent)
+            PetEditRouter.createEditView(this@CatalogActivity, pet.url)
         }
         // Setup FAB to open EditorActivity
         fab.setOnClickListener {
-            val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
-            startActivity(intent)
+            PetEditRouter.createEditView(this@CatalogActivity)
         }
     }
 
