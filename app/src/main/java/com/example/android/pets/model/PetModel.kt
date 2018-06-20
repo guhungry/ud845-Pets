@@ -5,7 +5,8 @@ import android.net.Uri
 import com.example.android.pets.data.PetContract.PetEntry
 
 class PetModel(var id: Long, var name: String, var gender: Int, var age: Int, var weight: Int, var breed: String = "") {
-    val url = Uri.withAppendedPath(PetEntry.CONTENT_URI, id.toString())
+    val url : Uri
+        get() = Uri.withAppendedPath(PetEntry.CONTENT_URI, id.toString())
 
     companion object {
         fun fromCursor(cursor: Cursor) : PetModel {

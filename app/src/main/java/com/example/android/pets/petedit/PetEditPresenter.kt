@@ -19,8 +19,6 @@ class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
     }
 
     private fun title() : String {
-        println(uri)
-        println(isEdit())
         return if (isEdit()) "Edit Pet" else "Add a Pet"
     }
 }
