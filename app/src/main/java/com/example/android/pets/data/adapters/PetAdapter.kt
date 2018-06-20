@@ -26,6 +26,4 @@ class PetAdapter(context: Context?, cursor: Cursor?) : CursorAdapter(context, cu
         view.findViewById<TextView>(R.id.name).text = pet.name
         view.findViewById<TextView>(R.id.breed).text = pet.breed
     }
-
-    fun showEmptyPet() = if (count > 0) View.GONE else View.VISIBLE
 }

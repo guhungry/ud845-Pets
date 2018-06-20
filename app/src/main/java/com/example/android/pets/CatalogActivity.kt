@@ -21,6 +21,7 @@ class CatalogActivity : BaseActivity() {
         setContentView(R.layout.activity_catalog)
 
         list_pets.adapter = adapter
+        list_pets.emptyView = empty_pet
         // Setup FAB to open EditorActivity
         fab.setOnClickListener {
             val intent = Intent(this@CatalogActivity, EditorActivity::class.java)
@@ -39,7 +40,6 @@ class CatalogActivity : BaseActivity() {
      */
     private fun displayDatabaseInfo() {
         adapter.changeCursor(queryPets(arrayOf(PetEntry._ID, PetEntry.NAME, PetEntry.BREED, PetEntry.GENDER, PetEntry.WEIGHT, PetEntry.AGE), null, null, null))
-        empty_pet.visibility = adapter.showEmptyPet()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
