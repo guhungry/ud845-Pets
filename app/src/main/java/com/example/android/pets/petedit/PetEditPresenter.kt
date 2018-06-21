@@ -38,6 +38,13 @@ class PetEditPresenter(override var uri: Uri? = null) : PetEditProtocol.Presente
         else view?.onSaveFail("Can't update pet")
     }
 
+    override fun deletePet() {
+        val result = store?.deletePet(uri) ?: 0
+
+        if (result > 0) view?.onSaveSuccess("Pet deleted successfully")
+        else view?.onSaveFail("Can't delete pet")
+    }
+
     private fun title(): Int {
         return if (isEdit()) R.string.editor_activity_title_edit_pet else R.string.editor_activity_title_new_pet
     }

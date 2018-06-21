@@ -19,6 +19,7 @@ class PetEditProtocol {
         fun isEdit(): Boolean
         fun insertPet(pet: PetModel)
         fun updatePet(pet: PetModel)
+        fun deletePet()
     }
 
     interface View {

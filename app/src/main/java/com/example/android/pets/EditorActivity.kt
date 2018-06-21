@@ -118,24 +118,28 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // User clicked on a menu option in the app bar overflow menu
-        when (item.itemId) {
+        return when (item.itemId) {
         // Respond to a click on the "Save" menu option
             R.id.action_save -> {
                 savePet()
-                return true
+                true
             }
         // Respond to a click on the "Delete" menu option
-            R.id.action_delete ->
-                // Do nothing for now
-                return true
+            R.id.action_delete -> {
+                deletePet()
+                true
+            }
         // Respond to a click on the "Up" arrow button in the app bar
             android.R.id.home -> {
-                // Navigate back to parent activity (CatalogActivity)
                 onBackPressed()
-                return true
+                true
             }
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deletePet() {
+        presenter!!.deletePet()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {

@@ -16,6 +16,15 @@ class PetStore(val contentResolver: ContentResolver) {
     }
 
     fun deleteAllPets(): Int {
-        return contentResolver.delete(PetContract.PetEntry.CONTENT_URI, "", arrayOf())
+        return delete(PetContract.PetEntry.CONTENT_URI)
     }
+
+    fun deletePet(uri: Uri?): Int {
+        return delete(uri)
+    }
+
+    // //////////////////
+    // Database Functions
+    // //////////////////
+    private fun delete(uri: Uri?) = contentResolver.delete(uri, "", arrayOf())
 }
