@@ -6,6 +6,7 @@ import com.example.android.pets.data.PetStore
 import com.example.android.pets.model.PetModel
 
 class PetEditPresenter(override var uri: Uri? = null) : PetEditProtocol.Presenter {
+    override var edited: Boolean = false
     override var view: PetEditProtocol.View? = null
     override var store: PetStore? = null
 

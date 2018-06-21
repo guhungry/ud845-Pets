@@ -15,14 +15,17 @@
  */
 package com.example.android.pets
 
+import android.app.AlertDialog
 import android.app.LoaderManager
 import android.content.CursorLoader
+import android.content.DialogInterface
 import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -55,6 +58,19 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
 
         setupPresenter(savedInstanceState)
         setupSpinner()
+        setupInputs()
+    }
+
+    private fun setupInputs() {
+        val onTouch = View.OnTouchListener { view, event ->
+            view?.performClick()
+            presenter?.edited = true
+            false
+        }
+        edit_pet_name.setOnTouchListener(onTouch)
+        edit_pet_breed.setOnTouchListener(onTouch)
+        spinner_gender.setOnTouchListener(onTouch)
+        edit_pet_weight.setOnTouchListener(onTouch)
     }
 
     private fun setupPresenter(savedInstanceState: Bundle?) {
@@ -111,11 +127,30 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
         // Respond to a click on the "Up" arrow button in the app bar
             android.R.id.home -> {
                 // Navigate back to parent activity (CatalogActivity)
-                navigateBack()
+                onBackPressed()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (!presenter!!.edited) super.onBackPressed()
+
+        showConfirmCloseDialog(DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
+            finish()
+        })
+    }
+
+    private fun showConfirmCloseDialog(listener: DialogInterface.OnClickListener) {
+        AlertDialog.Builder(this).apply {
+            setMessage(R.string.unsaved_changes_dialog_msg);
+            setPositiveButton(R.string.discard, listener);
+            setNegativeButton(R.string.keep_editing) { dialog: DialogInterface, which: Int ->
+                dialog.dismiss()
+            }
+            create().show()
+        }
     }
 
     private fun validateInput(): Boolean {

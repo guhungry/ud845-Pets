@@ -11,6 +11,7 @@ class PetEditProtocol {
         val uri: Uri?
         var view: View?
         var store: PetStore?
+        var edited: Boolean
 
         fun start()
         fun stop()
