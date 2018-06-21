@@ -21,6 +21,7 @@ import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -119,18 +120,29 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
     }
 
     private fun validateInput(): Boolean {
-        if (edit_pet_name!!.text.isEmpty()) {
-            edit_pet_name!!.requestFocus()
+        if (isInputAllBlank()) {
+            navigateBack()
+            return false
+        }
+
+        if (edit_pet_name.text.isEmpty()) {
+            edit_pet_name.requestFocus()
             showToastMessage("Name is empty")
             return false
         }
-        if (edit_pet_weight!!.text.isEmpty()) {
-            edit_pet_weight!!.requestFocus()
+        if (edit_pet_weight.text.isEmpty()) {
+            edit_pet_weight.requestFocus()
             showToastMessage("Weight is empty")
             return false
         }
 
         return true
+    }
+
+    private fun isInputAllBlank(): Boolean {
+        if (presenter!!.isEdit()) return false
+
+        return TextUtils.isEmpty(edit_pet_name.text) && TextUtils.isEmpty(edit_pet_breed.text) && TextUtils.isEmpty(edit_pet_weight.text) && mGender == Gender.Unknown
     }
 
     private fun savePet() {
