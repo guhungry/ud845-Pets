@@ -19,10 +19,6 @@ abstract class BaseActivity : AppCompatActivity() {
         return baseContext.contentResolver.query(PetContract.PetEntry.CONTENT_URI, projection, null, null, null)
     }
 
-    protected fun deletePets(): Int {
-        return baseContext.contentResolver.delete(PetContract.PetEntry.CONTENT_URI, "", arrayOf())
-    }
-
     protected fun showToastMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }

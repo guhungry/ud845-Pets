@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.android.pets.data.PetContract.PetEntry
+import com.example.android.pets.data.PetStore
 import com.example.android.pets.data.adapters.PetAdapter
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.petcatalog.PetCatalogProtocol
@@ -21,23 +22,46 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     private val PET_LOADER_ID = 1
     private val adapter = PetAdapter(context = this, cursor = null)
     override var presenter: PetCatalogProtocol.Presenter? = null
+    private var store: PetStore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalog)
 
+        setupPresenterAndDataLoader(savedInstanceState)
+        setupViews()
+    }
+
+    private fun setupPresenterAndDataLoader(savedInstanceState: Bundle?) {
+        store = PetStore(baseContext.contentResolver)
         presenter = PetCatalogRouter.presenterFor(this)
         loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
+    }
+
+    private fun setupViews() {
+        setupListPets()
+        setupFloatingActionButton()
+    }
+
+    private fun setupFloatingActionButton() {
+        fab.setOnClickListener {
+            presenter?.showPetAddScreenFor(this@CatalogActivity)
+        }
+    }
+
+    private fun setupListPets() {
         list_pets.adapter = adapter
         list_pets.emptyView = empty_pet
         list_pets.setOnItemClickListener { adapterView, view, position, id ->
             val pet: PetModel = view.tag as PetModel
             presenter?.showPetEditScreenFor(this@CatalogActivity, pet.url)
         }
-        // Setup FAB to open EditorActivity
-        fab.setOnClickListener {
-            presenter?.showPetAddScreenFor(this@CatalogActivity)
-        }
+    }
+
+    override fun onDestroy() {
+        presenter = null
+        store = null
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -52,19 +76,22 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
         return when (item.itemId) {
             R.id.action_insert_dummy_data -> {
                 insertDummyPet()
-                true
             }
             R.id.action_delete_all_entries -> {
                 deletePets()
-                true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun insertDummyPet() {
-        val pet = PetModel.dummy()
-        insertPet(pet.toContentValues())
+    private fun insertDummyPet() : Boolean {
+        store?.insertPet(PetModel.dummy().toContentValues())
+        return true
+    }
+
+    private fun deletePets() : Boolean {
+        store?.deletePets()
+        return true
     }
 
     // Data Loader
