@@ -24,7 +24,10 @@ class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
     }
 
     override fun insertPet(pet: PetModel) {
-        store?.insertPet(pet.toContentValues())
+        val id = store?.insertPet(pet.toContentValues()) ?: 0
+
+        if (id > 0) view?.onSaveSuccess("Pet saved with id: $id")
+        else view?.onSaveFail("Can't insert pet")
     }
 
     private fun title(): Int {

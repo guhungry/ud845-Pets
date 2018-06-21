@@ -21,6 +21,8 @@ class PetEditProtocol {
         var presenter: Presenter?
 
         fun setTitle(resourceId: Int)
+        fun onSaveSuccess(message: String)
+        fun onSaveFail(message: String)
     }
 
     interface Router {

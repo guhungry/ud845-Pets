@@ -129,12 +129,18 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     private fun savePet() {
         try {
             val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_name.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
-            val inserted = presenter?.insertPet(pet)
-
-            showToastMessage("Pet saved with id: $inserted")
-            navigateBack()
+            presenter?.insertPet(pet)
         } catch (e: Exception) {
             showToastMessage("Error with saving pet ($e)")
         }
+    }
+
+    override fun onSaveSuccess(message: String) {
+        showToastMessage(message)
+        navigateBack()
+    }
+
+    override fun onSaveFail(message: String) {
+        showToastMessage(message)
     }
 }
