@@ -42,7 +42,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private var mGender = Gender.Unknown
-    private val PET_LOADER_ID = 1
+    private val PET_LOADER_ID = 2
     override var presenter: PetEditProtocol.Presenter? = null
 
     companion object {
