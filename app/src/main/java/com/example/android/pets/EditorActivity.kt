@@ -25,7 +25,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -59,6 +58,11 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
         setupPresenter(savedInstanceState)
         setupSpinner()
         setupInputs()
+        setupMenu()
+    }
+
+    private fun setupMenu() {
+        if (!presenter!!.isEdit()) invalidateOptionsMenu()
     }
 
     private fun setupInputs() {
@@ -134,8 +138,20 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        super.onPrepareOptionsMenu(menu)
+
+        if (!presenter!!.isEdit()) {
+            menu?.findItem(R.id.action_delete)?.isVisible = false;
+        }
+        return true
+    }
+
     override fun onBackPressed() {
-        if (!presenter!!.edited) super.onBackPressed()
+        if (!presenter!!.edited) {
+            super.onBackPressed()
+            return
+        }
 
         showConfirmCloseDialog(DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
             finish()
