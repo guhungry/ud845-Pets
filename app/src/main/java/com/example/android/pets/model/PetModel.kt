@@ -37,6 +37,8 @@ class PetModel(var id: Long, var name: String, var gender: Int, var weight: Int,
         }
     }
 
+    fun displayBreed() = if (breed.isEmpty()) "Unknown Breed" else breed
+
     fun toContentValues(): ContentValues {
         return ContentValues().apply {
             put(PetEntry.NAME, name)
