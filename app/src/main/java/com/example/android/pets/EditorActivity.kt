@@ -50,7 +50,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         setContentView(R.layout.activity_editor)
 
         uri = intent?.extras?.get(INPUT_URL) as Uri?
-        presenter = PetEditRouter.presenterFor(this, uri)
+        presenter = PetEditRouter.presenterFor(this, baseContext.contentResolver, uri)
         setupSpinner()
         presenter?.start()
     }
@@ -133,7 +133,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     private fun savePet() {
         try {
             val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_name.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
-            val inserted = insertPet(pet.toContentValues())
+            val inserted = presenter?.insertPet(pet)
 
             showToastMessage("Pet saved with id: $inserted")
             NavUtils.navigateUpFromSameTask(this)
