@@ -42,7 +42,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     override var presenter: PetEditProtocol.Presenter? = null
 
     companion object {
-        val INPUT_URL = "URL"
+        const val INPUT_URL = "URL"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,10 +113,6 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun setTitle(text: String) {
-        super.setTitle(text)
     }
 
     private fun validateInput(): Boolean {

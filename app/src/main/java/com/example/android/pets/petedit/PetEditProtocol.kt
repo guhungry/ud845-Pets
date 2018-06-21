@@ -13,7 +13,7 @@ class PetEditProtocol {
 
     interface View {
         var presenter: Presenter?
-        fun setTitle(text: String)
+        fun setTitle(resourceId: Int)
     }
 
     interface Router {

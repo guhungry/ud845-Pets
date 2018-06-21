@@ -1,6 +1,7 @@
 package com.example.android.pets.petedit
 
 import android.net.Uri
+import com.example.android.pets.R
 
 class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
     override var view: PetEditProtocol.View? = null
@@ -18,7 +19,7 @@ class PetEditPresenter(var uri: Uri? = null) : PetEditProtocol.Presenter {
         view = null
     }
 
-    private fun title(): String {
-        return if (isEdit()) "Edit Pet" else "Add a Pet"
+    private fun title(): Int {
+        return if (isEdit()) R.string.editor_activity_title_edit_pet else R.string.editor_activity_title_new_pet
     }
 }
