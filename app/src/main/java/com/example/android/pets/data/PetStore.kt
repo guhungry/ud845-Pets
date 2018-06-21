@@ -10,7 +10,7 @@ class PetStore(val contentResolver: ContentResolver) {
         return ContentUris.parseId(uri)
     }
 
-    fun deletePets() : Int {
+    fun deleteAllPets(): Int {
         return contentResolver.delete(PetContract.PetEntry.CONTENT_URI, "", arrayOf())
     }
 }

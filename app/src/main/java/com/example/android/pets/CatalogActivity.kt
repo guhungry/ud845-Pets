@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.android.pets.data.PetContract.PetEntry
-import com.example.android.pets.data.PetStore
 import com.example.android.pets.data.adapters.PetAdapter
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.petcatalog.PetCatalogProtocol
@@ -22,7 +21,6 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     private val PET_LOADER_ID = 1
     private val adapter = PetAdapter(context = this, cursor = null)
     override var presenter: PetCatalogProtocol.Presenter? = null
-    private var store: PetStore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +31,7 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     }
 
     private fun setupPresenterAndDataLoader(savedInstanceState: Bundle?) {
-        store = PetStore(baseContext.contentResolver)
-        presenter = PetCatalogRouter.presenterFor(this)
+        presenter = PetCatalogRouter.presenterFor(this, baseContext.contentResolver)
         loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
     }
 
@@ -59,8 +56,8 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
     }
 
     override fun onDestroy() {
+        presenter?.stop()
         presenter = null
-        store = null
         super.onDestroy()
     }
 
@@ -84,13 +81,13 @@ class CatalogActivity : BaseActivity(), PetCatalogProtocol.View, LoaderManager.L
         }
     }
 
-    private fun insertDummyPet() : Boolean {
-        store?.insertPet(PetModel.dummy().toContentValues())
+    private fun insertDummyPet(): Boolean {
+        presenter?.insertPet(PetModel.dummy())
         return true
     }
 
-    private fun deletePets() : Boolean {
-        store?.deletePets()
+    private fun deletePets(): Boolean {
+        presenter?.deleteAllPets()
         return true
     }
 
