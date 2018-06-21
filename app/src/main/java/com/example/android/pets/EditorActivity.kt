@@ -17,7 +17,6 @@ package com.example.android.pets
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.NavUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,7 +37,6 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private var mGender = Gender.Unknown
-    private var uri: Uri? = null
     override var presenter: PetEditProtocol.Presenter? = null
 
     companion object {
@@ -49,9 +47,13 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        uri = intent?.extras?.get(INPUT_URL) as Uri?
-        presenter = PetEditRouter.presenterFor(this, baseContext.contentResolver, uri)
+        setupPresenter()
         setupSpinner()
+    }
+
+    private fun setupPresenter() {
+        val uri = intent?.extras?.get(INPUT_URL) as Uri?
+        presenter = PetEditRouter.presenterFor(this, baseContext.contentResolver, uri)
         presenter?.start()
     }
 
@@ -65,20 +67,16 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
      * Setup the dropdown spinner that allows the user to select the gender of the pet.
      */
     private fun setupSpinner() {
-        // Create adapter for spinner. The list options are from the String array it will use
-        // the spinner will use the default layout
         spinner_gender.adapter = ArrayAdapter.createFromResource(this, R.array.array_gender_options, android.R.layout.simple_spinner_item).apply {
             setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
         }
 
-        // Set the integer mSelected to the constant values
         spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selection = parent.getItemAtPosition(position) as String
                 mGender = Gender.valueOf(selection)
             }
 
-            // Because AdapterView is an abstract class, onNothingSelected must be defined
             override fun onNothingSelected(parent: AdapterView<*>) {
                 mGender = Gender.Unknown
             }
@@ -86,8 +84,6 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu options from the res/menu/menu_editor.xml file.
-        // This adds menu items to the app bar.
         menuInflater.inflate(R.menu.menu_editor, menu)
         return true
     }
@@ -108,7 +104,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         // Respond to a click on the "Up" arrow button in the app bar
             android.R.id.home -> {
                 // Navigate back to parent activity (CatalogActivity)
-                NavUtils.navigateUpFromSameTask(this)
+                navigateBack()
                 return true
             }
         }
@@ -136,7 +132,7 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
             val inserted = presenter?.insertPet(pet)
 
             showToastMessage("Pet saved with id: $inserted")
-            NavUtils.navigateUpFromSameTask(this)
+            navigateBack()
         } catch (e: Exception) {
             showToastMessage("Error with saving pet ($e)")
         }
