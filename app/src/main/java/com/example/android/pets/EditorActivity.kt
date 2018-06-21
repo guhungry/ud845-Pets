@@ -18,7 +18,6 @@ package com.example.android.pets
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.NavUtils
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -121,12 +120,12 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
     }
 
     private fun validateInput(): Boolean {
-        if (edit_pet_name!!.text.toString().isEmpty()) {
+        if (edit_pet_name!!.text.isEmpty()) {
             edit_pet_name!!.requestFocus()
             showToastMessage("Name is empty")
             return false
         }
-        if (edit_pet_weight!!.text.toString().isEmpty()) {
+        if (edit_pet_weight!!.text.isEmpty()) {
             edit_pet_weight!!.requestFocus()
             showToastMessage("Weight is empty")
             return false
