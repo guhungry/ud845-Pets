@@ -101,7 +101,6 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
         when (item.itemId) {
         // Respond to a click on the "Save" menu option
             R.id.action_save -> {
-                if (!validateInput()) return false
                 savePet()
                 return true
             }
@@ -135,6 +134,8 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
     }
 
     private fun savePet() {
+        if (!validateInput()) return
+
         try {
             val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_breed.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
 
