@@ -15,6 +15,10 @@
  */
 package com.example.android.pets
 
+import android.app.LoaderManager
+import android.content.CursorLoader
+import android.content.Loader
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -22,6 +26,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.example.android.pets.data.PetContract
 import com.example.android.pets.data.PetContract.Gender
 import com.example.android.pets.model.PetModel
 import com.example.android.pets.petedit.PetEditProtocol
@@ -31,12 +36,13 @@ import kotlinx.android.synthetic.main.activity_editor.*
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-class EditorActivity : BaseActivity(), PetEditProtocol.View {
+class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.LoaderCallbacks<Cursor> {
     /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private var mGender = Gender.Unknown
+    private val PET_LOADER_ID = 1
     override var presenter: PetEditProtocol.Presenter? = null
 
     companion object {
@@ -47,14 +53,16 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        setupPresenter()
+        setupPresenter(savedInstanceState)
         setupSpinner()
     }
 
-    private fun setupPresenter() {
+    private fun setupPresenter(savedInstanceState: Bundle?) {
         val uri = intent?.extras?.get(INPUT_URL) as Uri?
         presenter = PetEditRouter.presenterFor(this, baseContext.contentResolver, uri)
-        presenter?.start()
+        presenter!!.start()
+
+        if (presenter!!.isEdit()) loaderManager.initLoader(PET_LOADER_ID, savedInstanceState, this)
     }
 
     override fun onDestroy() {
@@ -128,8 +136,10 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
 
     private fun savePet() {
         try {
-            val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_name.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
-            presenter?.insertPet(pet)
+            val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_breed.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
+
+            if (presenter!!.isEdit()) presenter?.updatePet(pet)
+            else presenter?.insertPet(pet)
         } catch (e: Exception) {
             showToastMessage("Error with saving pet ($e)")
         }
@@ -142,5 +152,39 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View {
 
     override fun onSaveFail(message: String) {
         showToastMessage(message)
+    }
+
+    // ///////////////////////
+    // Loader Manager Delegate
+    // ///////////////////////
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        return CursorLoader(this, presenter?.uri, arrayOf(PetContract.PetEntry._ID, PetContract.PetEntry.NAME, PetContract.PetEntry.BREED, PetContract.PetEntry.GENDER, PetContract.PetEntry.WEIGHT, PetContract.PetEntry.AGE), null, null, null)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
+        if (data != null && data.moveToFirst()) updatePetData(PetModel.fromCursor(data))
+    }
+
+    override fun onLoaderReset(loader: Loader<Cursor>?) {
+        clearPetData()
+    }
+
+    // //////////////////
+    // Pet Data Functions
+    // //////////////////
+    private fun updatePetData(pet: PetModel) {
+        edit_pet_name.setText(pet.name)
+        edit_pet_breed.setText(pet.breed)
+        edit_pet_weight.setText(pet.weight.toString())
+        mGender = Gender.values()[pet.gender]
+        spinner_gender.setSelection(pet.gender)
+    }
+
+    private fun clearPetData() {
+        edit_pet_name.setText("")
+        edit_pet_breed.setText("")
+        edit_pet_weight.setText("")
+        mGender = Gender.Unknown
+        spinner_gender.setSelection(0)
     }
 }

@@ -8,13 +8,16 @@ import com.example.android.pets.model.PetModel
 
 class PetEditProtocol {
     interface Presenter {
+        val uri: Uri?
         var view: View?
         var store: PetStore?
 
         fun start()
         fun stop()
 
+        fun isEdit(): Boolean
         fun insertPet(pet: PetModel)
+        fun updatePet(pet: PetModel)
     }
 
     interface View {
