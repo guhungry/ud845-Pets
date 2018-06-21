@@ -21,7 +21,6 @@ import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -125,12 +124,12 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
             return false
         }
 
-        if (edit_pet_name.text.isEmpty()) {
+        if (isInputNameEmpty()) {
             edit_pet_name.requestFocus()
             showToastMessage("Name is empty")
             return false
         }
-        if (edit_pet_weight.text.isEmpty()) {
+        if (inputWeightEmpty()) {
             edit_pet_weight.requestFocus()
             showToastMessage("Weight is empty")
             return false
@@ -142,14 +141,18 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
     private fun isInputAllBlank(): Boolean {
         if (presenter!!.isEdit()) return false
 
-        return TextUtils.isEmpty(edit_pet_name.text) && TextUtils.isEmpty(edit_pet_breed.text) && TextUtils.isEmpty(edit_pet_weight.text) && mGender == Gender.Unknown
+        return isInputNameEmpty() && edit_pet_breed.text.isEmpty() && inputWeightEmpty() && mGender == Gender.Unknown
     }
+
+    private fun inputWeightEmpty() = edit_pet_weight.text.isEmpty()
+
+    private fun isInputNameEmpty() = edit_pet_name.text.isEmpty()
 
     private fun savePet() {
         if (!validateInput()) return
 
         try {
-            val pet = PetModel(id = 0, name = edit_pet_name.text.toString(), breed = edit_pet_breed.text.toString(), gender = mGender.ordinal, weight = Integer.parseInt(edit_pet_weight.text.toString()))
+            val pet = PetModel(id = 0, name = inputName(), breed = inputBreed(), gender = inputGender(), weight = inputWeight())
 
             if (presenter!!.isEdit()) presenter?.updatePet(pet)
             else presenter?.insertPet(pet)
@@ -157,6 +160,14 @@ class EditorActivity : BaseActivity(), PetEditProtocol.View, LoaderManager.Loade
             showToastMessage("Error with saving pet ($e)")
         }
     }
+
+    // ///////////////
+    // Input Functions
+    // ///////////////
+    private fun inputName() = edit_pet_name.text.toString()
+    private fun inputGender() = mGender.ordinal
+    private fun inputBreed() = edit_pet_breed.text.toString()
+    private fun inputWeight() = edit_pet_weight.text.toString().toIntOrNull() ?: 0
 
     override fun onSaveSuccess(message: String) {
         showToastMessage(message)
